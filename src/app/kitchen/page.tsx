@@ -1,5 +1,7 @@
 'use client'
 
+export const dynamic = 'force-dynamic'
+
 import { useState, useEffect } from 'react'
 import { useKitchenOrders } from '@/hooks/useKitchenOrders'
 import { updateOrderStatus } from '@/lib/api/orders'
