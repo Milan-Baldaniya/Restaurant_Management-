@@ -72,7 +72,7 @@ export default function SuccessPage() {
                     filter: `id=eq.${activeOrderId}`
                 },
                 (payload) => {
-                    setOrder(payload.new as Order)
+                    setOrder(prev => prev ? { ...prev, ...(payload.new as Partial<Order>) } as Order : payload.new as Order)
                 }
             )
             .subscribe()

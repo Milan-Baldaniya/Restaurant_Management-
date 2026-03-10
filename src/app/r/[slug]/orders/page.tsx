@@ -110,17 +110,25 @@ export default function OrdersPage() {
 
                     if (updated.status === 'completed') {
                         // Remove from active, add to history
-                        setActiveOrders(prev => prev.filter(o => o.id !== updated.id))
-                        setPastOrders(prev => [{
-                            id: updated.id,
-                            status: updated.status,
-                            total_amount: updated.total_amount,
-                            created_at: updated.created_at
-                        }, ...prev])
+                        setActiveOrders(prev => {
+                            const orderToComplete = prev.find(o => o.id === updated.id)
+                            setPastOrders(pastPrev => {
+                                const newPastOrder = orderToComplete ? { ...orderToComplete, ...updated } : {
+                                    id: updated.id,
+                                    status: updated.status,
+                                    total_amount: updated.total_amount || 0, // Fallback if missing
+                                    created_at: updated.created_at || new Date().toISOString()
+                                }
+                                // Check if already exist to prevent duplicates if fired twice
+                                if (pastPrev.some(o => o.id === newPastOrder.id)) return pastPrev;
+                                return [newPastOrder, ...pastPrev]
+                            })
+                            return prev.filter(o => o.id !== updated.id)
+                        })
                     } else {
                         // Update status in active list
                         setActiveOrders(prev =>
-                            prev.map(o => o.id === updated.id ? { ...o, status: updated.status } : o)
+                            prev.map(o => o.id === updated.id ? { ...o, ...updated } : o)
                         )
                     }
                 }
