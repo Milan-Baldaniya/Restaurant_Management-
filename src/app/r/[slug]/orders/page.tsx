@@ -91,54 +91,46 @@ export default function OrdersPage() {
         loadOrders()
     }, [customerMobile, restaurant])
 
-    // STEP 3 — realtime subscription for ALL active orders
+    // STEP 3 — polling for ALL active orders (fallback since realtime depends on REPLICA IDENTITY FULL)
     useEffect(() => {
-        if (activeOrders.length === 0 || !restaurant || !customerMobile) return
+        if (!restaurant || !customerMobile) return
 
-        const channel = supabase
-            .channel(`orders-tracking-${customerMobile}`)
-            .on(
-                'postgres_changes',
-                {
-                    event: 'UPDATE',
-                    schema: 'public',
-                    table: 'orders',
-                    filter: `customer_mobile=eq.${customerMobile}`
-                },
-                (payload) => {
-                    const updated = payload.new as Order
+        // We only poll if there is at least one active order or if we just want to keep checking
+        // but polling continuously is fine as long as customer is on the page.
+        const pollActiveOrders = async () => {
+            const { data } = await supabase
+                .from('orders')
+                .select('id, status, total_amount, created_at')
+                .eq('restaurant_id', restaurant.id)
+                .eq('customer_mobile', customerMobile)
+                .neq('status', 'completed')
+                .order('created_at', { ascending: false })
 
-                    if (updated.status === 'completed') {
-                        // Remove from active, add to history
-                        setActiveOrders(prev => {
-                            const orderToComplete = prev.find(o => o.id === updated.id)
-                            setPastOrders(pastPrev => {
-                                const newPastOrder = orderToComplete ? { ...orderToComplete, ...updated } : {
-                                    id: updated.id,
-                                    status: updated.status,
-                                    total_amount: updated.total_amount || 0, // Fallback if missing
-                                    created_at: updated.created_at || new Date().toISOString()
-                                }
-                                // Check if already exist to prevent duplicates if fired twice
-                                if (pastPrev.some(o => o.id === newPastOrder.id)) return pastPrev;
-                                return [newPastOrder, ...pastPrev]
-                            })
-                            return prev.filter(o => o.id !== updated.id)
-                        })
-                    } else {
-                        // Update status in active list
-                        setActiveOrders(prev =>
-                            prev.map(o => o.id === updated.id ? { ...o, ...updated } : o)
-                        )
-                    }
+            if (data) {
+                setActiveOrders(data as Order[])
+                
+                // Also check if any active order we knew about became completed
+                // This is a bit tricky with polling.  If an order is completed, it simply vanishes from the `activeData`.
+                // For a seamless UX, let's refresh history as well if activeOrders count dropped.
+                // A simpler way: just refetch history on interval too.
+                const { data: historyData } = await supabase
+                    .from('orders')
+                    .select('id, status, total_amount, created_at')
+                    .eq('restaurant_id', restaurant.id)
+                    .eq('customer_mobile', customerMobile)
+                    .eq('status', 'completed')
+                    .order('created_at', { ascending: false })
+                
+                if (historyData) {
+                    setPastOrders(historyData as Order[])
                 }
-            )
-            .subscribe()
-
-        return () => {
-            supabase.removeChannel(channel)
+            }
         }
-    }, [activeOrders.length, customerMobile, restaurant])
+
+        const intervalId = setInterval(pollActiveOrders, 5000)
+
+        return () => clearInterval(intervalId)
+    }, [customerMobile, restaurant])
 
     // View history order items
     const handleViewHistoryOrder = async (orderId: string) => {

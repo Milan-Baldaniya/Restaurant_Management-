@@ -61,24 +61,30 @@ export default function SuccessPage() {
     useEffect(() => {
         if (!activeOrderId) return
 
-        const channel = supabase
-            .channel(`order-tracking-${activeOrderId}`)
-            .on(
-                'postgres_changes',
-                {
-                    event: 'UPDATE',
-                    schema: 'public',
-                    table: 'orders',
-                    filter: `id=eq.${activeOrderId}`
-                },
-                (payload) => {
-                    setOrder(prev => prev ? { ...prev, ...(payload.new as Partial<Order>) } as Order : payload.new as Order)
-                }
-            )
-            .subscribe()
+        const fetchLatestStatus = async () => {
+             const { data } = await supabase
+                .from('orders')
+                .select('id, status, total_amount, created_at')
+                .eq('id', activeOrderId)
+                .single()
+            
+             if (data) {
+                 setOrder(prev => {
+                     // Only update state if status changed to avoid unnecessary re-renders
+                     if (prev && prev.status === data.status) return prev;
+                     return { ...prev, ...(data as Order) }
+                 })
+             }
+        }
+
+        // Poll every 5 seconds
+        const intervalId = setInterval(fetchLatestStatus, 5000)
+
+        // Initial fetch is handled by the other useEffect, but let's do one immediately just in case
+        fetchLatestStatus()
 
         return () => {
-            supabase.removeChannel(channel)
+            clearInterval(intervalId)
         }
     }, [activeOrderId])
 
