@@ -393,7 +393,7 @@ export default function OrdersPage() {
                                 <div className="flex gap-3">
                                     <button 
                                         onClick={() => handleTrackOrder(order.id)}
-                                        className="flex-1 bg-primary text-background-dark py-3 rounded-xl font-black text-sm shadow-[0_4px_0_#c77a0b] active:shadow-none active:translate-y-1 transition-all uppercase tracking-tighter"
+                                        className="btn-3d-press flex-1 bg-primary py-3 rounded-xl font-black text-sm text-white uppercase tracking-tighter"
                                     >
                                         {activeListTab === 'active' ? 'Track Order' : 'View Details'}
                                     </button>

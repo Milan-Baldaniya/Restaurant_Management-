@@ -134,7 +134,7 @@ export default function CustomerEntryPage() {
                     <div className="mt-5 px-6 flex flex-col justify-end">
                         <button 
                             type="submit"
-                            className="group relative w-full h-14 bg-primary rounded-2xl shadow-[0_6px_0_rgb(180,100,0),0_10px_15px_rgba(242,147,13,0.3)] transition-all duration-75 active:shadow-[0_2px_0_rgb(180,100,0)] active:translate-y-1 hover:brightness-110 flex items-center justify-center gap-2 text-white font-bold text-base overflow-hidden animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300 shrink-0"
+                            className="group relative w-full h-14 bg-primary rounded-2xl btn-3d-press overflow-hidden flex items-center justify-center gap-2 text-white font-bold text-base animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300 shrink-0"
                         >
                             <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none"></div>
                             <span className="relative flex items-center gap-2">
