@@ -13,7 +13,12 @@ export default function CustomerEntryPage() {
 
     const [name, setName] = useState('')
     const [mobile, setMobile] = useState('')
-    const [tableNumber, setTableNumber] = useState('5')
+    const [tableNumber, setTableNumber] = useState(() => {
+        if (typeof window !== 'undefined') {
+            return sessionStorage.getItem('table_number') || '0'
+        }
+        return '0'
+    })
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
@@ -45,6 +50,9 @@ export default function CustomerEntryPage() {
         router.replace(`/r/${slug}/menu`)
     }
 
+    const isParcel = tableNumber === '0'
+    const displayTableText = isParcel ? 'Parcel' : `Table ${tableNumber}`
+
     return (
         <div className="relative flex h-[100dvh] max-h-[100dvh] w-full flex-col max-w-md mx-auto overflow-hidden bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 transition-colors duration-300">
             {/* Header Section */}
@@ -72,7 +80,7 @@ export default function CustomerEntryPage() {
                         <div className="absolute inset-0 bg-gradient-to-t from-background-dark/90 to-transparent"></div>
                         <div className="relative z-10 p-4">
                             <span className="bg-primary text-white px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-widest mb-1 inline-block">Digital Menu</span>
-                            <h1 className="text-white text-2xl font-bold leading-tight">Table {tableNumber}</h1>
+                            <h1 className="text-white text-2xl font-bold leading-tight">{displayTableText}</h1>
                             <p className="text-white/80 text-xs font-medium mt-0.5">Ready for something delicious?</p>
                         </div>
                     </div>
@@ -80,7 +88,7 @@ export default function CustomerEntryPage() {
 
                 {/* Welcome Text */}
                 <div className="px-6 py-3 text-center animate-in fade-in slide-in-from-top-4 duration-700 shrink-0">
-                    <h2 className="text-slate-900 dark:text-slate-100 tracking-tight text-xl font-bold leading-tight pb-1">Welcome to Table {tableNumber}</h2>
+                    <h2 className="text-slate-900 dark:text-slate-100 tracking-tight text-xl font-bold leading-tight pb-1">Welcome to {displayTableText}</h2>
                     <p className="text-slate-600 dark:text-slate-400 text-sm font-normal leading-relaxed mb-2">Please enter your details to browse our menu and start your dining experience.</p>
                 </div>
 

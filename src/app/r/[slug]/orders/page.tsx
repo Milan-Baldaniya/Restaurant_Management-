@@ -5,6 +5,7 @@ import { useRouter, useParams } from 'next/navigation'
 import { supabase } from '@/lib/supabase/client'
 import { useRestaurant } from '@/providers/RestaurantProvider'
 import { normalizeMobile } from '@/lib/normalizeMobile'
+import { FoodLoader } from '@/components/ui/FoodLoader'
 
 type Order = {
     id: string
@@ -154,11 +155,7 @@ export default function OrdersPage() {
     if (!customerMobile) return null
 
     if (loading) {
-        return (
-            <div className="min-h-screen bg-background-light dark:bg-background-dark flex items-center justify-center font-display text-lg text-slate-500">
-                <div className="animate-pulse">Loading orders...</div>
-            </div>
-        )
+        return <FoodLoader text="Fetching your orders..." />
     }
 
     if (viewMode === 'tracking' && selectedOrderId) {

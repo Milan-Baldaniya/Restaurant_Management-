@@ -4,6 +4,7 @@ import { useEffect, Suspense } from 'react'
 import { useParams, useRouter, useSearchParams } from 'next/navigation'
 import { supabase } from '@/lib/supabase/client'
 import { useRestaurant } from '@/providers/RestaurantProvider'
+import { FoodLoader } from '@/components/ui/FoodLoader'
 
 function EntryContent() {
     const { slug } = useParams()
@@ -41,11 +42,21 @@ function EntryContent() {
 
                     if (tableData && !tableError) {
                         sessionStorage.setItem('table_id', tableData.id)
-                        sessionStorage.setItem('table_number', parsedNumber.toString())
                     } else if (tableError) {
                         console.error("Error fetching table:", tableError)
+                    } else {
+                        console.warn("Table not found in database for number:", parsedNumber)
                     }
+                    
+                    // Always set the table number for the UI, so it correctly displays Table 3, Table 7, etc.
+                    // Even if table doesn't exist in the DB (for testing/demo purposes), we want the UI to respect the URL param.
+                    sessionStorage.setItem('table_number', parsedNumber.toString())
                 }
+            } else {
+                // If there's no table parameter in the URL (e.g., standard visit to /r/restaurant), 
+                // we rigorously clear any inherited table parameters to force Parcel mode.
+                sessionStorage.setItem('table_number', '0')
+                sessionStorage.removeItem('table_id')
             }
 
             router.replace(`/r/${slug}/customer`)
@@ -54,12 +65,12 @@ function EntryContent() {
         validate()
     }, [slug, router, searchParams, setRestaurant])
 
-    return <p>Validating restaurant...</p>
+    return <FoodLoader text="Preparing your restaurant experience..." />
 }
 
 export default function Page() {
     return (
-        <Suspense fallback={<p>Loading...</p>}>
+        <Suspense fallback={<FoodLoader text="Preparing your restaurant experience..." />}>
             <EntryContent />
         </Suspense>
     )

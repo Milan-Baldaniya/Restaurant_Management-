@@ -6,6 +6,7 @@ import { useRestaurant } from '@/providers/RestaurantProvider'
 import { supabase } from '@/lib/supabase/client'
 import { useCart } from '@/store/cart.store'
 import FloatingCartBar from '@/components/cart/FloatingCartBar'
+import { FoodLoader } from '@/components/ui/FoodLoader'
 
 
 export default function MenuPage() {
@@ -89,11 +90,7 @@ export default function MenuPage() {
     }
 
     if (loading) {
-        return (
-            <div style={{ padding: '40px', textAlign: 'center' }}>
-                <p>Loading menu...</p>
-            </div>
-        )
+        return <FoodLoader text="Preparing our menu for you..." />
     }
 
     return (
