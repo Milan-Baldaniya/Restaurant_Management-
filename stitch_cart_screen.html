@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f2930d",
+                        "background-light": "#f8f7f5",
+                        "background-dark": "#221b10",
+                    },
+                    fontFamily: {
+                        "display": ["Work Sans"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<title>3D Glass Checkout</title>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style><style>
+    .glass-tile {
+      background: rgba(242, 147, 13, 0.05);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(242, 147, 13, 0.2);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+    }
+    .btn-3d-press {
+      box-shadow: 0 4px 0 #c4760a, 0 8px 15px rgba(0,0,0,0.4);
+      transition: all 0.1s ease;
+    }
+    .btn-3d-press:active {
+      transform: translateY(2px);
+      box-shadow: 0 2px 0 #c4760a, 0 4px 8px rgba(0,0,0,0.4);
+    }
+    .stepper-3d {
+      box-shadow: inset 2px 2px 4px rgba(0,0,0,0.4), inset -2px -2px 4px rgba(255,255,255,0.05);
+    }
+    @keyframes pulse-gold {
+      0% { box-shadow: 0 0 0 0 rgba(242, 147, 13, 0.7); }
+      70% { box-shadow: 0 0 0 15px rgba(242, 147, 13, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(242, 147, 13, 0); }
+    }
+    .animate-pulse-3d {
+      animation: pulse-gold 2s infinite;
+    }
+  </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased">
+<!-- Main Container (Mobile First) -->
+<div class="relative mx-auto flex min-h-screen max-w-md flex-col bg-background-light dark:bg-background-dark">
+<!-- Top App Bar -->
+<header class="sticky top-0 z-10 flex items-center justify-between border-b border-primary/20 bg-background-dark/60 px-4 py-4 backdrop-blur-xl">
+<div class="flex items-center gap-3">
+<button class="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary transition-colors hover:bg-primary/20">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="text-xl font-bold tracking-tight">Checkout</h1>
+</div>
+<button class="text-primary hover:underline">Clear</button>
+</header>
+<main class="flex-1 px-4 py-6">
+<!-- Items Section -->
+<section class="mb-8">
+<div class="mb-4 flex items-center justify-between">
+<h2 class="text-lg font-semibold">Your Items</h2>
+<span class="rounded-full bg-primary/20 px-3 py-1 text-xs font-medium text-primary uppercase">3 Items</span>
+</div>
+<div class="space-y-4"><!-- Item 1 -->
+<div class="glass-tile flex items-center gap-4 rounded-xl p-4 transition-transform hover:scale-[1.02]">
+<div class="h-20 w-20 shrink-0 overflow-hidden rounded-lg shadow-2xl ring-1 ring-white/10 bg-cover bg-center" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAdcxegrgKwR8zyB90BQEUHRiuvVBkry1B1rX0Ll_EcLyl4TIlFKixOsDbu5YlsPjhzRSN6xmwmTwKHvngmhjp1gy5J4s3unokbtdgqZ9yP-KcfA2aeKbRzn96g4PLw6fimby8cgq2CFblg2t2uk5inC04EivTgsISMv10RQro8aoSI1qrvDBHHDQ5zqycWKlrS-6lffyEL3WOdW7sJDDl5eRuJmlKiUKUNjGgwJ4ZV4xMVVzp2LvK4hqEKiwCQBzXV1qkQME2uwIQ');"></div>
+<div class="flex flex-1 flex-col justify-between">
+<div class="flex justify-between">
+<p class="font-semibold text-lg">Organic Avocado</p>
+<p class="font-bold text-primary text-xl">$8.00</p>
+</div>
+<div class="mt-3 flex items-center justify-between">
+<p class="text-xs text-slate-400">$4.00 / unit</p>
+<div class="flex items-center gap-4 stepper-3d rounded-full bg-black/40 px-3 py-1.5">
+<button class="btn-3d-press flex h-7 w-7 items-center justify-center rounded-full bg-primary/20 text-primary">
+<span class="material-symbols-outlined text-sm font-bold">remove</span>
+</button>
+<span class="text-sm font-bold w-4 text-center">2</span>
+<button class="btn-3d-press flex h-7 w-7 items-center justify-center rounded-full bg-primary text-white">
+<span class="material-symbols-outlined text-sm font-bold">add</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="glass-tile flex items-center gap-4 rounded-xl p-4 transition-transform hover:scale-[1.02]">
+<div class="h-20 w-20 shrink-0 overflow-hidden rounded-lg shadow-2xl ring-1 ring-white/10 bg-cover bg-center" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAW2PCdIX_RhA02t76fLyB98Fhot0O1vjYHrNnrMXo9nBX9wgIP3kt9N_C4dMGhDebSvKPLSvZPVadFLxy_zMrJ2yazx8kgrOLnUFZqbAb3AeLdwWFaoqS2Khk5RSr6dO-QgYPMYO9UsL-RSQARuVmTq6UhIn2RrASVtB-4qXM66L7YolB72hvN7gBwXD5JLmjsXQ3cghW6yuqCyHawpw5tyRFpEcHpEUx3rRVcTdhEZB_L_Hls4Bdhrk56n2cbp2TcAj0LJ7Rc84c');"></div>
+<div class="flex flex-1 flex-col justify-between">
+<div class="flex justify-between">
+<p class="font-semibold text-lg">Almond Milk 1L</p>
+<p class="font-bold text-primary text-xl">$3.50</p>
+</div>
+<div class="mt-3 flex items-center justify-between">
+<p class="text-xs text-slate-400">$3.50 / unit</p>
+<div class="flex items-center gap-4 stepper-3d rounded-full bg-black/40 px-3 py-1.5">
+<button class="btn-3d-press flex h-7 w-7 items-center justify-center rounded-full bg-primary/20 text-primary">
+<span class="material-symbols-outlined text-sm font-bold">remove</span>
+</button>
+<span class="text-sm font-bold w-4 text-center">1</span>
+<button class="btn-3d-press flex h-7 w-7 items-center justify-center rounded-full bg-primary text-white">
+<span class="material-symbols-outlined text-sm font-bold">add</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Item 3 -->
+<div class="glass-tile flex items-center gap-4 rounded-xl p-4 transition-transform hover:scale-[1.02]">
+<div class="h-20 w-20 shrink-0 overflow-hidden rounded-lg shadow-2xl ring-1 ring-white/10 bg-cover bg-center" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuARibL5Hp8RHsM9NyUWuB4XVSoeAB1tV-1-QJI3wmmb8TxAuMiqAPNIRKlErrCg6h_cJiGvrVBB-FQpDou2aLDCKSj-g1uT469tFXogfaMsDvcj3rm9UV03_IyHS2oKts0gt9pcZImvLHsFm3EvyE6SbVSgualXUP3KPerXrKGlsJRucdts9GjKBGpy_wuHDq1ta1iURmrqQLELKaUse-zAO14O-9JcAvuJe_bQNHcDhu8BRcW-zfV8GNnBApLrDrbfEQ8Oc5ekB-Y');"></div>
+<div class="flex flex-1 flex-col justify-between">
+<div class="flex justify-between">
+<p class="font-semibold text-lg">Whole Grain Bread</p>
+<p class="font-bold text-primary text-xl">$2.50</p>
+</div>
+<div class="mt-3 flex items-center justify-between">
+<p class="text-xs text-slate-400">$2.50 / unit</p>
+<div class="flex items-center gap-4 stepper-3d rounded-full bg-black/40 px-3 py-1.5">
+<button class="btn-3d-press flex h-7 w-7 items-center justify-center rounded-full bg-primary/20 text-primary">
+<span class="material-symbols-outlined text-sm font-bold">remove</span>
+</button>
+<span class="text-sm font-bold w-4 text-center">1</span>
+<button class="btn-3d-press flex h-7 w-7 items-center justify-center rounded-full bg-primary text-white">
+<span class="material-symbols-outlined text-sm font-bold">add</span>
+</button>
+</div>
+</div>
+</div>
+</div></div>
+</section>
+<!-- Payment Method Section -->
+<section class="mb-8">
+<h2 class="mb-4 text-lg font-semibold">Payment Method</h2>
+<div class="grid grid-cols-2 gap-4"><!-- Online Option -->
+<label class="glass-tile relative flex cursor-pointer flex-col items-center gap-3 rounded-2xl p-6 text-center shadow-xl ring-2 ring-primary">
+<input checked="" class="hidden" name="payment" type="radio"/>
+<div class="flex h-14 w-14 items-center justify-center rounded-full bg-primary/20 shadow-[0_10px_20px_rgba(242,147,13,0.3)]">
+<span class="material-symbols-outlined text-4xl text-primary">account_balance_wallet</span>
+</div>
+<span class="text-sm font-bold">UPI / Online</span>
+<span class="absolute -top-2 -right-2 flex h-7 w-7 items-center justify-center rounded-full bg-primary shadow-lg ring-2 ring-background-dark">
+<span class="material-symbols-outlined text-sm font-black text-white">check</span>
+</span>
+</label>
+<!-- Cash Option -->
+<label class="glass-tile relative flex cursor-pointer flex-col items-center gap-3 rounded-2xl p-6 text-center opacity-60 grayscale transition-all hover:grayscale-0 hover:opacity-100">
+<input class="hidden" name="payment" type="radio"/>
+<div class="flex h-14 w-14 items-center justify-center rounded-full bg-slate-700/50">
+<span class="material-symbols-outlined text-4xl text-slate-300">payments</span>
+</div>
+<span class="text-sm font-bold">Cash on Delivery</span>
+</label></div>
+</section>
+<!-- Summary Section -->
+<section class="glass-tile rounded-2xl p-5 mb-6">
+<div class="space-y-3">
+<div class="flex justify-between text-sm text-slate-600 dark:text-slate-400">
+<span>Subtotal</span>
+<span>$14.00</span>
+</div>
+<div class="flex justify-between text-sm text-slate-600 dark:text-slate-400">
+<span>Delivery Fee</span>
+<span class="text-green-600 dark:text-green-400">FREE</span>
+</div>
+<div class="flex justify-between text-sm text-slate-600 dark:text-slate-400">
+<span>Taxes</span>
+<span>$1.20</span>
+</div>
+<div class="my-2 border-t border-primary/20 pt-3 flex justify-between">
+<span class="text-lg font-bold">Total Amount</span>
+<span class="text-lg font-bold text-primary">$15.20</span>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom CTA -->
+<footer class="sticky bottom-0 bg-background-dark/80 backdrop-blur-md p-6 pb-10 border-t border-white/5"><button class="animate-pulse-3d btn-3d-press group flex w-full items-center justify-between rounded-2xl bg-primary px-8 py-5 font-black text-white transition-all hover:scale-[1.02] active:scale-95">
+<div class="flex flex-col items-start">
+<span class="text-xs uppercase tracking-widest opacity-80">Confirm order</span>
+<span class="text-xl">Place Order</span>
+</div>
+<div class="flex items-center gap-3">
+<div class="h-10 border-l border-white/20 mx-1"></div>
+<span class="text-2xl">$15.20</span>
+<span class="material-symbols-outlined text-3xl transition-transform group-hover:translate-x-1">chevron_right</span>
+</div>
+</button></footer>
+</div>
+</body></html>

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Order Tracking - Table 5</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f2930d",
+                        "background-light": "#f8f7f5",
+                        "background-dark": "#221b10",
+                    },
+                    fontFamily: {
+                        "display": ["Work Sans"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Work Sans', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-step {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen flex flex-col">
+<!-- Top Navigation -->
+<header class="sticky top-0 z-10 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-primary/10">
+<div class="flex items-center p-4 justify-between max-w-2xl mx-auto w-full">
+<button class="flex items-center justify-center p-2 rounded-full hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined text-primary">arrow_back</span>
+</button>
+<h1 class="text-lg font-bold tracking-tight text-center flex-1">Order Status</h1>
+<div class="w-10"></div> <!-- Spacer for balance -->
+</div>
+</header>
+<main class="flex-1 max-w-2xl mx-auto w-full px-4 py-6 space-y-8">
+<!-- Table Context Header -->
+<div class="flex items-end justify-between">
+<div>
+<p class="text-primary font-medium text-sm uppercase tracking-wider">Current Order</p>
+<h2 class="text-3xl font-bold">Table 05</h2>
+</div>
+<div class="text-right">
+<p class="text-slate-500 dark:text-slate-400 text-xs">Order ID</p>
+<p class="font-mono font-medium">#BK-8821</p>
+</div>
+</div>
+<!-- Real-time Status Progress Bar -->
+<section class="backdrop-blur-xl bg-white/5 dark:bg-white/5 rounded-xl p-6 border border-white/20 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)]">
+<div class="flex justify-between items-center mb-4">
+<p class="font-semibold text-lg">Preparing your meal</p>
+<span class="text-primary font-bold">65%</span>
+</div>
+<div class="w-full bg-slate-200 dark:bg-slate-800 h-3 rounded-full overflow-hidden mb-6"><div class="bg-slate-900/50 h-full w-full rounded-full shadow-[inset_0_2px_4px_rgba(0,0,0,0.6)] relative overflow-hidden">
+<div class="bg-gradient-to-r from-primary/80 to-primary h-full rounded-full w-[65%] shadow-[0_0_15px_rgba(242,147,13,0.8)] relative">
+<div class="absolute inset-0 bg-white/20 h-1/2 rounded-full"></div>
+</div>
+</div></div>
+<!-- Vertical Stepper -->
+<div class="space-y-0">
+<!-- Step 1: Completed -->
+<div class="flex gap-4">
+<div class="flex flex-col items-center">
+<div class="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-background-dark shadow-[0_4px_0_rgb(180,110,10)] active:translate-y-0.5 active:shadow-none transition-all">
+<span class="material-symbols-outlined text-sm font-bold">check</span>
+</div>
+<div class="w-0.5 bg-primary h-12"></div>
+</div>
+<div class="pt-1 pb-4">
+<p class="font-bold">Order Received</p>
+<p class="text-sm text-slate-500 dark:text-slate-400">Received at 12:40 PM</p>
+</div>
+</div>
+<!-- Step 2: Active -->
+<div class="flex gap-4">
+<div class="flex flex-col items-center">
+<div class="flex h-10 w-10 items-center justify-center rounded-full bg-primary/20 border border-primary/50 text-primary shadow-[0_4px_15px_rgba(242,147,13,0.4)] animate-pulse">
+<span class="material-symbols-outlined active-step">restaurant</span>
+</div>
+<div class="w-0.5 bg-slate-300 dark:bg-slate-700 h-12"></div>
+</div>
+<div class="pt-1 pb-4">
+<p class="font-bold text-primary">Preparing Items</p>
+<p class="text-sm text-slate-500 dark:text-slate-400">Chef is working on your order</p>
+</div>
+</div>
+<!-- Step 3: Pending -->
+<div class="flex gap-4">
+<div class="flex flex-col items-center">
+<div class="flex h-10 w-10 items-center justify-center rounded-full bg-white/5 border border-white/10 text-slate-500 shadow-inner">
+<span class="material-symbols-outlined">concierge</span>
+</div>
+</div>
+<div class="pt-1">
+<p class="font-bold text-slate-400">Ready for Pickup</p>
+<p class="text-sm text-slate-500 dark:text-slate-400">Estimated 1:05 PM</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Order Items List -->
+<section class="space-y-4">
+<h3 class="text-xl font-bold border-b border-primary/10 pb-2">Order Summary</h3>
+<div class="space-y-4">
+<!-- Item 1 -->
+<div class="flex items-center gap-4 p-4 rounded-xl backdrop-blur-md bg-white/5 border border-white/10 shadow-lg hover:bg-white/10 transition-all cursor-pointer">
+<div class="w-16 h-16 rounded-lg overflow-hidden bg-slate-200 dark:bg-slate-800 flex-shrink-0">
+<img alt="Gourmet Cheeseburger" class="w-full h-full object-cover" data-alt="Juicy gourmet cheeseburger with fresh ingredients" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCe_6iD7Lz4MarMSNMbgZJYfNqaDirleXtJB73uDOHNRh4d44tHGM2Ttx6oN8jSKrtq8dz2Pc2kv2QPPbWL6R8UZ4kPbBoagh7RlVji-ZwHMvrTNeJWvXuD8d192O7RZPqjy9iiAhmMucFukClLR0Y_aLiY_ftMPXrsmmsZHkdY1-QlfXAgHAUH77BnXZ-RRm6RRfh90XSnpxdk4V2Z2Hvi0yuJ19tgslHK0BAP9G_fP4fl7tt_rxKbpfc5dZiz3mQUMvTTpD0ua1A"/>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<h4 class="font-bold">Gourmet Cheeseburger</h4>
+<p class="font-semibold text-primary">$18.50</p>
+</div>
+<p class="text-sm text-slate-500 dark:text-slate-400">Quantity: 1 • Medium Rare</p>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="flex items-center gap-4 p-4 rounded-xl backdrop-blur-md bg-white/5 border border-white/10 shadow-lg hover:bg-white/10 transition-all cursor-pointer">
+<div class="w-16 h-16 rounded-lg overflow-hidden bg-slate-200 dark:bg-slate-800 flex-shrink-0">
+<img alt="Truffle Fries" class="w-full h-full object-cover" data-alt="Crispy truffle oil seasoned french fries" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAuzMJMi1jqyxiUKBnSp2KCRyHZw2o9qjLPk2K9GzfVQmqnzwlBJ24hNu767LWRXZrsp76Yo_lhbf14wTAAz2LDeTudeJyPWawciqhlFyWP98EpSDpf9hYQwmskX83zdO-c6WtEiYDW5KbDAGR8eqW5EcjyHIOcYstdCZzcnke7ipSt-WSU98jI_BwtCxo0OUvngBzb7VGXBdjNpeQYJwsYhvoIumQzbqSszoqDjm4eoemfw79H6stFW1yA8aJoR695TnpWO-vBDm4"/>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<h4 class="font-bold">Truffle Parmesan Fries</h4>
+<p class="font-semibold text-primary">$9.00</p>
+</div>
+<p class="text-sm text-slate-500 dark:text-slate-400">Quantity: 1 • Extra Dip</p>
+</div>
+</div>
+<!-- Item 3 -->
+<div class="flex items-center gap-4 p-4 rounded-xl backdrop-blur-md bg-white/5 border border-white/10 shadow-lg hover:bg-white/10 transition-all cursor-pointer">
+<div class="w-16 h-16 rounded-lg overflow-hidden bg-slate-200 dark:bg-slate-800 flex-shrink-0 text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-3xl">local_bar</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<h4 class="font-bold">Craft IPA Beer</h4>
+<p class="font-semibold text-primary">$7.50</p>
+</div>
+<p class="text-sm text-slate-500 dark:text-slate-400">Quantity: 2 • Draft</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Bill Overview CTA -->
+<div class="bg-gradient-to-br from-primary to-[#d9840c] rounded-2xl p-6 text-background-dark shadow-[0_20px_50px_rgba(242,147,13,0.3)] border-t border-white/30">
+<div class="flex justify-between items-center">
+<div>
+<p class="text-sm font-medium opacity-80 uppercase tracking-tight">Total Bill</p>
+<p class="text-3xl font-bold">$42.50</p>
+</div>
+<button class="bg-background-dark text-slate-100 px-8 py-3 rounded-xl font-bold flex items-center gap-2 shadow-[0_6px_0_rgb(15,10,5)] hover:shadow-[0_4px_0_rgb(15,10,5)] hover:translate-y-0.5 active:translate-y-1 active:shadow-none transition-all border border-white/10">
+<span class="material-symbols-outlined">payments</span>
+    Pay Now
+</button>
+</div>
+</div>
+<div class="h-20"></div> <!-- Padding for nav bar -->
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 right-0 bg-background-light dark:bg-background-dark border-t border-primary/10 px-6 py-3">
+<div class="max-w-2xl mx-auto flex justify-between items-center">
+<a class="flex flex-col items-center gap-1 text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">restaurant_menu</span>
+<span class="text-[10px] font-bold uppercase tracking-tighter">Menu</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined active-step">receipt_long</span>
+<span class="text-[10px] font-bold uppercase tracking-tighter">Order</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">notifications</span>
+<span class="text-[10px] font-bold uppercase tracking-tighter">Alerts</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">credit_card</span>
+<span class="text-[10px] font-bold uppercase tracking-tighter">Bill</span>
+</a>
+</div>
+</nav>
+</body></html>

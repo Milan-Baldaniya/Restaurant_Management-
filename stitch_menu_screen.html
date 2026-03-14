@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Pizza Palace - Menu</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f2930d",
+                        "background-light": "#f8f7f5",
+                        "background-dark": "#120e0a",
+                    },
+                    fontFamily: {
+                        "display": ["Work Sans"]
+                    },
+                    borderRadius: {"DEFAULT": "0.75rem", "lg": "1rem", "xl": "1.5rem", "2xl": "2rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style><style>
+    .glass-pane {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+    }
+    .glossy-3d-btn {
+        background: linear-gradient(135deg, #f2930d 0%, #d17b00 100%);
+        box-shadow: 
+            0 4px 0 #8a5100, 
+            0 8px 15px rgba(0,0,0,0.4),
+            inset 0 1px 0 rgba(255,255,255,0.4);
+        transition: all 0.1s ease;
+        position: relative;
+        top: 0;
+    }
+    .glossy-3d-btn:active {
+        top: 3px;
+        box-shadow: 
+            0 1px 0 #8a5100, 
+            0 2px 5px rgba(0,0,0,0.4),
+            inset 0 1px 0 rgba(255,255,255,0.4);
+    }
+    .dock-3d {
+        background: rgba(30, 25, 20, 0.8);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-bottom: none;
+        box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
+        border-radius: 2rem 2rem 0 0;
+    }
+    .food-3d-pop {
+        filter: drop-shadow(0 10px 15px rgba(0,0,0,0.5));
+        transition: transform 0.3s ease;
+    }
+    .food-3d-pop:hover {
+        transform: scale(1.05) translateY(-5px);
+    }
+</style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen">
+<!-- Top App Bar -->
+<header class="sticky top-4 z-50 px-4 max-w-2xl mx-auto w-full mb-4">
+<div class="glass-pane rounded-2xl p-4 flex items-center justify-between w-full">
+<div class="flex items-center gap-3">
+<div class="size-10 shrink-0 rounded-full bg-primary/20 flex items-center justify-center overflow-hidden border border-white/10">
+<img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBwsFiou9OXKR0naymVbKRms6l6jxtmPBGYu1ITpt7RRsDrYcsHO_T4_2HnZDuZWmRWygwWzde1SrDLgs5YCHAZWBqVYqb_rkQkr-LDmLZGSZBp70Q8NT38j-0x1WvaKXNWUDgAa_z9wckGnHa_vxm2xh6s__frFYZ4YrjA7c1iACLRCkcueSnkBuo5mUyMdc-h7rBR3_KeK-w4DYE1uTUmwwLcRpfbE4AywihsTOJndNQDl9qfCfgb0kRni6CjXjND9fxYgc8Ts8A"/>
+</div>
+<div>
+<h2 class="text-white text-lg font-bold leading-tight">Pizza Palace</h2>
+<p class="text-primary text-xs font-semibold">Open until 10:00 PM</p>
+</div>
+</div>
+<div class="bg-white/5 border border-white/10 px-3 py-1 rounded-full">
+<p class="text-primary text-sm font-bold tracking-wide">Table 5</p>
+</div>
+</div>
+<div class="mt-4 flex gap-6 overflow-x-auto no-scrollbar">
+<a class="flex flex-col items-center justify-center border-b-2 border-primary pb-1 shrink-0" href="#"><p class="text-primary text-sm font-bold">Pizza</p></a>
+<a class="flex flex-col items-center justify-center text-slate-400 pb-1 shrink-0" href="#"><p class="text-sm font-bold">Pasta</p></a>
+<a class="flex flex-col items-center justify-center text-slate-400 pb-1 shrink-0" href="#"><p class="text-sm font-bold">Drinks</p></a>
+<a class="flex flex-col items-center justify-center text-slate-400 pb-1 shrink-0" href="#"><p class="text-sm font-bold">Sides</p></a>
+</div>
+</header>
+<main class="p-4 max-w-2xl mx-auto pb-40">
+<!-- Featured Item / Active Selection -->
+<div class="mb-6">
+<h3 class="text-lg font-bold mb-4">Popular Selection</h3>
+<div class="glass-pane flex items-stretch justify-between gap-4 rounded-2xl p-5">
+<div class="flex flex-[2_2_0px] flex-col justify-between py-1">
+<div class="flex flex-col gap-1">
+<p class="text-slate-900 dark:text-slate-100 text-base font-bold">Margherita Pizza</p>
+<p class="text-slate-500 dark:text-slate-400 text-sm">Classic tomato sauce, fresh mozzarella, and basil</p>
+<p class="text-primary text-base font-bold mt-1">$12.00</p>
+</div>
+<button class="glossy-3d-btn flex min-w-[120px] items-center justify-center rounded-xl h-10 px-4 text-white gap-2 text-sm font-bold w-fit mt-4">
+<span class="material-symbols-outlined text-[18px]">add</span>
+<span>Add to cart</span>
+</button>
+</div>
+<div class="w-32 h-32 bg-center bg-no-repeat bg-cover rounded-lg shrink-0 food-3d-pop border-2 border-white/10" data-alt="Fresh Margherita pizza with basil leaves" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBBX9KX8x2npfcouHETj2SW4FhJ0whygmi3vjbV_tWUzBzihCtLunqxeslU2XBzd9KxV_1LIDm3lpkFg_S4j9bKp5hX_ToONCe0VUT2-zmOd8liZKjB3hrYmVOTcUdiGGf7PVjd-1WZhrFINTLpS3lvfdpYjYp7_OXpmxgEcEZaUzlXcuJJ3dWi23_2rJwPV-QR0NwcpFaLgLDcYTXOIEg2lanfg_eR7K7StxLhBcvlOPJAGOep9yMfb31G-I5t6-wlWqgNz3ByDSE");'></div>
+</div>
+</div>
+<!-- Section: Active Order Items -->
+<div class="mb-6 space-y-3">
+<h3 class="text-lg font-bold">In Your Order</h3>
+<div class="flex items-center gap-4 bg-white/5 dark:bg-black/40 backdrop-blur-md px-4 py-4 rounded-2xl border border-white/10 shadow-inner">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-lg size-14 shrink-0" data-alt="Spicy pepperoni pizza slice" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBqE-l-LkQ7QKvgsYpEsox99XiUu4k0itptrCJIIcRD4TJ-yETSTqiNBn4lp4fW7tiJv5PCKSZNrAHbg2TKGLQL_7MlBSXiE8fJjfkrVuZvhiOC6J2clIIWSn240JqZXdDU4nPf7lgIpa6HArd82we9YawdmOLM4WC5cCboA51AX3MvKapmyeCRXYlt3n6aCCnMQs5mQ0fvbJhmc6h1TCQzYH32JX7f4y2vp4dmB4DVk8g6gQ-R96_993QCGbmRUdMxIbYM59bQRlk");'></div>
+<div class="flex-1 min-w-0">
+<p class="text-slate-900 dark:text-slate-100 text-base font-bold truncate">Pepperoni Feast</p>
+<p class="text-primary text-sm font-medium">$15.50</p>
+</div>
+<div class="shrink-0">
+<div class="flex items-center gap-3 bg-white dark:bg-background-dark p-1 rounded-full border border-primary/10">
+<button class="text-slate-900 dark:text-slate-100 flex h-8 w-8 items-center justify-center rounded-full bg-primary/20 hover:bg-primary/30 transition-colors">
+<span class="material-symbols-outlined text-sm">remove</span>
+</button>
+<span class="text-base font-bold w-4 text-center">1</span>
+<button class="text-slate-900 dark:text-slate-100 flex h-8 w-8 items-center justify-center rounded-full bg-primary/20 hover:bg-primary/30 transition-colors">
+<span class="material-symbols-outlined text-sm">add</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Menu List -->
+<div class="space-y-4">
+<h3 class="text-lg font-bold">More Pizzas</h3>
+<div class="glass-pane flex items-stretch justify-between gap-4 rounded-2xl p-4">
+<div class="flex flex-[2_2_0px] flex-col justify-between py-1">
+<div class="flex flex-col gap-1">
+<p class="text-slate-900 dark:text-slate-100 text-base font-bold">Veggie Supreme</p>
+<p class="text-slate-500 dark:text-slate-400 text-sm">Mushrooms, bell peppers, onions, and olives</p>
+<p class="text-primary text-base font-bold mt-1">$14.00</p>
+</div>
+<button class="glossy-3d-btn flex min-w-[84px] items-center justify-center rounded-lg h-8 px-4 text-white gap-1 text-sm font-bold w-fit mt-2">
+<span class="material-symbols-outlined text-[18px]">add</span>
+<span>Add</span>
+</button>
+</div>
+<div class="w-24 h-24 bg-center bg-no-repeat bg-cover rounded-lg shrink-0 food-3d-pop border border-white/10" data-alt="Vibrant vegetable supreme pizza" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAcv18jTMiIBC8sBNYERyxvNUYMVoS4YpCDNl2lnzke_a7w2psiGgr7CT9F6yoIGWBetjHKt7I8rsgnBxlbTkIhMDIhEw8KkBXNsyHrFFCgvxrHbMFjbbqOLEEdLG9MZf9i4P1Dgy3S_uIENHZ6I42fZz8_kb9LLJebHJB1KeIqY7VPeaWh-ml2SLW7EpKGV6UOr6IbzeWB1rvFtnjSZilwmSdQhNmnOZU5s-WF5ya00GGVpPnfG4nwvzFb-kHuxKFMZ_7yxXVyaBQ");'></div>
+</div>
+<div class="glass-pane flex items-stretch justify-between gap-4 rounded-2xl p-4">
+<div class="flex flex-[2_2_0px] flex-col justify-between py-1">
+<div class="flex flex-col gap-1">
+<p class="text-slate-900 dark:text-slate-100 text-base font-bold">BBQ Chicken</p>
+<p class="text-slate-500 dark:text-slate-400 text-sm">Grilled chicken, red onions, and smoky BBQ sauce</p>
+<p class="text-primary text-base font-bold mt-1">$16.50</p>
+</div>
+<button class="glossy-3d-btn flex min-w-[84px] items-center justify-center rounded-lg h-8 px-4 text-white gap-1 text-sm font-bold w-fit mt-2">
+<span class="material-symbols-outlined text-[18px]">add</span>
+<span>Add</span>
+</button>
+</div>
+<div class="w-24 h-24 bg-center bg-no-repeat bg-cover rounded-lg shrink-0 food-3d-pop border border-white/10" data-alt="BBQ Chicken pizza with swirling sauce" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCfmmZjYn_nejljGE0UlUaB-9o5Cl4fVVbJkvTaI6dghjPQie4KwMe8O-uU3Orgj2UoMsJotKZdEYXmtSu3lBo6PCUFJybp_iltLlkl_5zzDpNnkb5hQQJ6PhP4lfHiinbYSakFLJmL3j2gVOktRnVfMA9QqTmz-_06v-8YwAQMmDu6BrczKfoipj65UOzEUgwfcnTEXIai5MwgsJDeJ7T_twL8GONb4PsxOWM49sgTMph1AE5WE04dd6ZALs0uLiCKWNG0NL__Gdw");'></div>
+</div>
+<div class="glass-pane flex items-stretch justify-between gap-4 rounded-2xl p-4">
+<div class="flex flex-[2_2_0px] flex-col justify-between py-1">
+<div class="flex flex-col gap-1">
+<p class="text-slate-900 dark:text-slate-100 text-base font-bold">Four Cheese</p>
+<p class="text-slate-500 dark:text-slate-400 text-sm">Mozzarella, parmesan, gorgonzola, and ricotta</p>
+<p class="text-primary text-base font-bold mt-1">$13.50</p>
+</div>
+<button class="glossy-3d-btn flex min-w-[84px] items-center justify-center rounded-lg h-8 px-4 text-white gap-1 text-sm font-bold w-fit mt-2">
+<span class="material-symbols-outlined text-[18px]">add</span>
+<span>Add</span>
+</button>
+</div>
+<div class="w-24 h-24 bg-center bg-no-repeat bg-cover rounded-lg shrink-0 food-3d-pop border border-white/10" data-alt="Rich four cheese golden pizza" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDUGxQ9I5y7EuId8jw-DSWIGrx_jJ97fwDrnlMacRkw2P37M_dODukbrXgBJaUjhoIeNfA9FR7orNtNfOCQgsE0qSrb88dbws9nd5lB7ZPV4wPaMbvWQb81LITZlDDl_oM-DMM9mP1k7F_cuiYa5w1JVnzdDQBFQKQPEZmDWjZP3PB18H3k5CL5SqJaezbttdEfn7R5M900W0CF0k-arFV5UEZBrEDAZqJSVpDdxiAozfyqhzBQddhxyqF9NTzkyw-nSicgj_-JmOc");'></div>
+</div>
+</div>
+</main>
+<!-- Bottom Cart Summary Bar -->
+<div class="fixed bottom-0 left-0 right-0 p-4 dock-3d">
+<div class="max-w-2xl mx-auto">
+<button class="glossy-3d-btn w-full flex items-center justify-between p-4 rounded-2xl active:scale-[0.98]">
+<div class="flex items-center gap-3">
+<div class="bg-black/20 border border-white/10 px-2 py-1 rounded-md text-xs font-bold">1 ITEM</div>
+<div class="flex flex-col items-start">
+<p class="text-sm font-bold leading-none">View Cart</p>
+<p class="text-[10px] opacity-80 uppercase tracking-tighter mt-1">Pepperoni Feast</p>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<p class="text-lg font-bold">$15.50</p>
+<span class="material-symbols-outlined">arrow_forward_ios</span>
+</div>
+</button>
+</div>
+</div>
+</body></html>

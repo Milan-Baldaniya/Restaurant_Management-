@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f2930d",
+                        "background-light": "#f8f7f5",
+                        "background-dark": "#1a140b",
+                        "glass-white": "rgba(255, 255, 255, 0.05)",
+                        "glass-border": "rgba(255, 255, 255, 0.1)"
+                    },
+                    fontFamily: {
+                        "display": ["Work Sans"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                    boxShadow: {
+                        "3d-depth": "0 20px 40px -15px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.1)",
+                    }
+                },
+            },
+        }</script>
+<title>My Orders</title>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased" style="perspective: 1000px; scroll-behavior: smooth;">
+<div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+<!-- Header -->
+<header class="sticky top-0 z-30 bg-background-dark/60 backdrop-blur-xl border-b border-white/5">
+<div class="flex items-center p-4 justify-between">
+<button class="flex size-10 items-center justify-center rounded-full bg-white/5 hover:bg-white/10 transition-all">
+<span class="material-symbols-outlined text-white">arrow_back</span>
+</button>
+<h2 class="text-lg font-bold leading-tight tracking-tight flex-1 text-center text-white">My Orders</h2>
+<div class="size-10"></div>
+</div>
+<div class="px-4 pb-4">
+<div class="relative flex p-1 bg-white/5 rounded-xl border border-white/10 backdrop-blur-md shadow-inner">
+<div class="absolute inset-y-1 left-1 w-[calc(50%-4px)] bg-primary rounded-lg shadow-lg transform transition-transform duration-300 ease-out translate-x-0 z-0" id="tab-indicator"></div>
+<button class="relative z-10 flex-1 py-2 text-sm font-bold text-background-dark text-center" onclick="document.getElementById('tab-indicator').style.transform='translateX(0)'">
+                Active
+            </button>
+<button class="relative z-10 flex-1 py-2 text-sm font-bold text-white/60 text-center" onclick="document.getElementById('tab-indicator').style.transform='translateX(100%)'">
+                Previous
+            </button>
+</div>
+</div>
+</header>
+<!-- Main Content (Scrollable Area) -->
+<main class="flex-1 p-4 space-y-4"><!-- Order Card 1 -->
+<div class="group relative rounded-2xl bg-white/5 border border-white/10 p-1 shadow-3d-depth transform transition-all duration-500 hover:-translate-y-2 hover:rotate-x-2">
+<div class="absolute -inset-1 bg-gradient-to-br from-primary/20 to-transparent rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="relative flex flex-col rounded-xl bg-slate-900/40 backdrop-blur-xl overflow-hidden border border-white/5">
+<div class="relative aspect-[16/9] overflow-hidden">
+<img alt="Order 1" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD25Ad6IOwkHGO3CbKaotyDML6WiVsn4oCJeSS_07LBZ9-l8LnDZDFX_EFJUxamIljKZgzlauLDv7tV7jCgxVze1EGWC_svl4McCl_gwyIb9OCcI2ytedk2HUCUIYVmSxQZiaPComuB2kcu8a8rV4GrNhZSKOL7F343iNFMpuACwLY2J8rf9x4WGIL7VR0zae51YtZfQdERq7_S3QXGFQCLMTCkETen9MPG-tstVvxYqa7UWVA_traMmIjkhnhaSAjPBT2dUrjm8pc"/>
+<div class="absolute top-4 left-4 bg-primary/90 backdrop-blur-md text-background-dark text-[10px] font-black uppercase px-3 py-1.5 rounded-full shadow-lg">In Transit</div>
+</div>
+<div class="p-5 space-y-4">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="text-xl font-bold text-white">Order #88291</h3>
+<p class="text-xs text-white/40 uppercase tracking-widest mt-1">Tech Accessories • 2 Items</p>
+</div>
+<span class="text-2xl font-black text-primary">$45.00</span>
+</div>
+<div class="flex items-center gap-3 text-sm text-white/60">
+<span class="material-symbols-outlined text-primary">local_shipping</span>
+<span>Arriving by Oct 24</span>
+</div>
+<div class="flex gap-3">
+<button class="flex-1 bg-primary text-background-dark py-3 rounded-xl font-black text-sm shadow-[0_4px_0_#c77a0b] active:shadow-none active:translate-y-1 transition-all uppercase tracking-tighter">
+                    Track Shipment
+                </button>
+<button class="px-4 bg-white/5 border border-white/10 rounded-xl text-white hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined">more_horiz</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Order Card 2 -->
+<div class="group relative rounded-2xl bg-white/5 border border-white/10 p-1 shadow-3d-depth transform transition-all duration-500 hover:-translate-y-2 hover:rotate-x-2 opacity-90">
+<div class="relative flex flex-col rounded-xl bg-slate-900/40 backdrop-blur-xl overflow-hidden border border-white/5">
+<div class="relative aspect-[16/9] overflow-hidden">
+<img alt="Order 2" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCV7h3FvYLGPEfQzx1xKSratzFZ0NpSygImgf5rxz4l3vcAxgjHWiqXc5I4VE093H9YpUhI67W3Xg6hLLg84haM83czinw1qz45L407tBkEsP_rUyxkoPyn0OkIBrn-EaHDOYYXfIDN-fHVMHMNKwEjWBfL8c8tmgdcdQQuSAvilgFAeZWmS5nzSXGRPcjuRY1BEKmi-RU0tn6rVOJI8wGNOIrvDZj_DTj7ptCJHoAzNNCjKESQCEx8gzmatxcGyEeMwU4etb5e13o"/>
+<div class="absolute top-4 left-4 bg-white/20 backdrop-blur-md text-white text-[10px] font-black uppercase px-3 py-1.5 rounded-full shadow-lg">Processing</div>
+</div>
+<div class="p-5 space-y-4">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="text-xl font-bold text-white">Order #88102</h3>
+<p class="text-xs text-white/40 uppercase tracking-widest mt-1">Smart Devices • 1 Item</p>
+</div>
+<span class="text-2xl font-black text-primary">$120.50</span>
+</div>
+<div class="flex items-center gap-3 text-sm text-white/60">
+<span class="material-symbols-outlined text-white/40">calendar_today</span>
+<span>Placed Oct 20</span>
+</div>
+<div class="flex gap-3">
+<button class="flex-1 bg-white/5 border border-white/10 text-white py-3 rounded-xl font-black text-sm hover:bg-white/10 transition-all uppercase tracking-tighter">
+                    View Details
+                </button>
+<button class="px-4 bg-white/5 border border-white/10 rounded-xl text-white hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined">more_horiz</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<div class="h-24"></div></main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 right-0 z-40 px-6 pb-8 pt-2">
+<div class="max-w-md mx-auto bg-slate-900/60 backdrop-blur-2xl border border-white/10 rounded-3xl p-2 flex items-center justify-around shadow-2xl">
+<a class="flex flex-col items-center p-3 text-white/40 hover:text-primary transition-all">
+<span class="material-symbols-outlined">home</span>
+</a>
+<a class="flex flex-col items-center p-4 bg-primary rounded-2xl text-background-dark shadow-lg shadow-primary/20 transform scale-110">
+<span class="material-symbols-outlined fill-[1]">receipt_long</span>
+</a>
+<a class="flex flex-col items-center p-3 text-white/40 hover:text-primary transition-all">
+<span class="material-symbols-outlined">shopping_cart</span>
+</a>
+<a class="flex flex-col items-center p-3 text-white/40 hover:text-primary transition-all">
+<span class="material-symbols-outlined">person</span>
+</a>
+</div>
+</nav>
+</div>
+</body></html>

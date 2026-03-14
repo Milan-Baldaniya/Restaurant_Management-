@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Order Success - Table 5</title>
+<!-- Load Work Sans Font -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS v3 with Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#f2930d',
+            darkBg: '#0a0a0a',
+          },
+          fontFamily: {
+            sans: ['Work Sans', 'sans-serif'],
+          },
+          borderRadius: {
+            'custom': '12px',
+          },
+          animation: {
+            'spin-slow': 'spin 8s linear infinite',
+            'bounce-subtle': 'bounceSubtle 3s ease-in-out infinite',
+            'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
+            'glow-pulse': 'glowPulse 2s ease-in-out infinite',
+          },
+          keyframes: {
+            bounceSubtle: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-10px)' },
+            },
+            fadeInUp: {
+              '0%': { opacity: '0', transform: 'translateY(20px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' },
+            },
+            glowPulse: {
+              '0%, 100%': { filter: 'drop-shadow(0 0 5px #f2930d)' },
+              '50%': { filter: 'drop-shadow(0 0 20px #f2930d)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="glassmorphism-effects">
+    .glass-card {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+    }
+    
+    .3d-push-button {
+      transition: all 0.1s ease;
+      box-shadow: 0 6px 0px #b56e0a;
+      transform: translateY(-2px);
+    }
+    
+    .3d-push-button:active {
+      box-shadow: 0 2px 0px #b56e0a;
+      transform: translateY(2px);
+    }
+
+    .3d-push-button-secondary {
+      transition: all 0.1s ease;
+      box-shadow: 0 6px 0px #222;
+      transform: translateY(-2px);
+    }
+    
+    .3d-push-button-secondary:active {
+      box-shadow: 0 2px 0px #222;
+      transform: translateY(2px);
+    }
+
+    .success-icon-container {
+      perspective: 1000px;
+    }
+
+    .success-checkmark-3d {
+      transform-style: preserve-3d;
+      animation: rotate3d 5s infinite linear;
+    }
+
+    @keyframes rotate3d {
+      0% { transform: rotateY(0deg); }
+      100% { transform: rotateY(360deg); }
+    }
+  </style>
+</head>
+<body class="bg-darkBg text-white font-sans min-h-screen flex flex-col items-center justify-center p-6 overflow-hidden">
+<!-- BEGIN: Background Elements -->
+<div class="fixed inset-0 overflow-hidden pointer-events-none">
+<div class="absolute top-[-10%] left-[-10%] w-72 h-72 bg-primary opacity-10 blur-[120px] rounded-full"></div>
+<div class="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-primary opacity-5 blur-[150px] rounded-full"></div>
+</div>
+<!-- END: Background Elements -->
+<!-- BEGIN: Main Success Container -->
+<main class="w-full max-w-md z-10 animate-fade-in-up" data-purpose="order-success-container">
+<div class="glass-card rounded-custom p-8 text-center relative overflow-hidden">
+<!-- BEGIN: 3D Success Animated Icon -->
+<div class="success-icon-container flex justify-center mb-6" data-purpose="animated-success-icon">
+<div class="success-checkmark-3d w-20 h-20 bg-primary rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(242,147,13,0.4)] animate-glow-pulse">
+<svg class="h-12 w-12 text-black" fill="none" stroke="currentColor" stroke-width="3" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+</div>
+<!-- END: 3D Success Animated Icon -->
+<h1 class="text-3xl font-bold mb-2 tracking-tight">Order Received!</h1>
+<p class="text-gray-400 mb-8">Table 5 • Order #8824</p>
+<!-- BEGIN: Food Imagery -->
+<div class="relative mb-10" data-purpose="food-display">
+<div class="absolute inset-0 bg-primary opacity-20 blur-2xl rounded-full scale-75 animate-pulse"></div>
+<img alt="Your Order" class="relative z-10 w-48 h-48 object-cover mx-auto rounded-full border-4 border-white/10 shadow-2xl animate-bounce-subtle" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDGu5UHGAK91GdXoOWSPKIYE5DQAh1s0vnNfTmTqfiODDOYQdwngf3Xn2A9j1xyqvLxUK7DZv4WvHqfIWyGIzbw2ddmdIrMZe-FI3RhSQbfYyqF-ufaKbzEvRG-rWFx6APhn3nXqcXVmmXcVwQif4pbnssZtcni8a95rEqGcLd9NFzC-KhjCcou6pnEOxxKFD__xrvtE-Dt91K0YTuBa60IyHxwVDZ-oPNyDLTAS6BT9s3F_GwUB7HnUFnKOczhnvqGqdzO3LC43U4"/>
+</div>
+<!-- END: Food Imagery -->
+<div class="space-y-4">
+<p class="text-lg text-gray-200">Your meal is being prepared by our head chef and will be served shortly.</p>
+<div class="pt-4 pb-2">
+<div class="h-1 w-full bg-white/10 rounded-full overflow-hidden">
+<div class="h-full bg-primary w-1/3 animate-[pulse_2s_infinite]"></div>
+</div>
+<div class="flex justify-between text-xs mt-2 text-primary font-semibold uppercase tracking-widest">
+<span>Preparing</span>
+<span class="text-gray-500">Serving</span>
+</div>
+</div>
+</div>
+</div>
+<!-- BEGIN: Action Buttons -->
+<div class="mt-8 space-y-4" data-purpose="action-buttons">
+<!-- Track Order Button -->
+<button class="3d-push-button w-full bg-primary text-black font-bold py-4 rounded-custom text-lg flex items-center justify-center space-x-2">
+<svg class="h-6 w-6" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+<path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Track Your Order</span>
+</button>
+<!-- View Receipt Button -->
+<button class="3d-push-button-secondary w-full bg-white/5 text-white font-semibold py-4 rounded-custom text-lg border border-white/10 flex items-center justify-center space-x-2">
+<svg class="h-6 w-6" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>View Receipt</span>
+</button>
+</div>
+<!-- END: Action Buttons -->
+<!-- BEGIN: Footer Branding -->
+<footer class="mt-12 text-center text-gray-500 text-sm tracking-widest uppercase" data-purpose="footer">
+      Lumière Gastronomy
+    </footer>
+<!-- END: Footer Branding -->
+</main>
+<!-- END: Main Success Container -->
+</body></html>

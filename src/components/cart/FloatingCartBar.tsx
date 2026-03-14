@@ -18,44 +18,26 @@ export default function FloatingCartBar() {
     }
 
     return (
-        <div style={{
-            position: 'fixed',
-            bottom: 0,
-            left: 0,
-            right: 0,
-            height: '70px',
-            backgroundColor: 'white',
-            boxShadow: '0 -4px 6px -1px rgba(0, 0, 0, 0.1)',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            padding: '0 20px',
-            zIndex: 50,
-            borderTop: '1px solid #e5e7eb'
-        }}>
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <span style={{ fontWeight: 'bold', fontSize: '16px' }}>{totalItems} items</span>
-                <span style={{ fontSize: '14px', color: '#666' }}>₹{totalPrice.toFixed(2)}</span>
+        <div className="fixed bottom-0 left-0 right-0 p-4 dock-3d z-50">
+            <div className="max-w-2xl mx-auto">
+                <button 
+                    onClick={() => router.push(`/r/${slug}/cart`)}
+                    className="glossy-3d-btn w-full flex items-center justify-between p-4 rounded-2xl active:scale-[0.98]"
+                >
+                    <div className="flex items-center gap-3">
+                        <div className="bg-black/20 border border-white/10 px-2 py-1 rounded-md text-xs font-bold text-white">
+                            {totalItems} ITEM{totalItems !== 1 ? 'S' : ''}
+                        </div>
+                        <div className="flex flex-col items-start text-white">
+                            <p className="text-sm font-bold leading-none">View Cart</p>
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-2 text-white">
+                        <p className="text-lg font-bold">₹{totalPrice.toFixed(2)}</p>
+                        <span className="material-symbols-outlined">arrow_forward_ios</span>
+                    </div>
+                </button>
             </div>
-
-            <button
-                onClick={() => router.push(`/r/${slug}/cart`)}
-                style={{
-                    backgroundColor: '#10b981', // green-500
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '8px',
-                    padding: '10px 20px',
-                    fontSize: '16px',
-                    fontWeight: 'bold',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '5px'
-                }}
-            >
-                View Cart →
-            </button>
         </div>
     )
 }

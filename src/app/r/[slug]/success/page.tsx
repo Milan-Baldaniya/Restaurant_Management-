@@ -159,87 +159,72 @@ export default function SuccessPage() {
     }
 
     return (
-        <div style={{
-            minHeight: '100vh',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '20px',
-            fontFamily: 'system-ui, sans-serif',
-            textAlign: 'center',
-            backgroundColor: '#f9fafb'
-        }}>
-            <div style={{
-                backgroundColor: 'white',
-                padding: '40px 30px',
-                borderRadius: '16px',
-                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-                maxWidth: '400px',
-                width: '100%'
-            }}>
-                <div style={{ fontSize: '64px', marginBottom: '20px', lineHeight: 1 }}>
-                    ✅
-                </div>
-
-                <h1 style={{ fontSize: '24px', fontWeight: 'bold', margin: '0 0 10px 0', color: '#111827' }}>
-                    Order Confirmed!
-                </h1>
-
-                <p style={{ fontSize: '16px', color: '#6b7280', margin: '0 0 20px 0' }}>
-                    {restaurant.name}
-                </p>
-
-                <div style={{
-                    backgroundColor: '#f3f4f6',
-                    padding: '15px',
-                    borderRadius: '8px',
-                    marginBottom: '20px'
-                }}>
-                    <p style={{ margin: 0, fontSize: '14px', color: '#6b7280' }}>Order ID</p>
-                    <p style={{ margin: '5px 0 0 0', fontWeight: 'bold', fontSize: '18px', color: '#374151' }}>
-                        #{orderId.slice(0, 8).toUpperCase()}
-                    </p>
-                </div>
-
-                {order && (
-                    <div style={{
-                        backgroundColor: '#f3f4f6',
-                        padding: '15px',
-                        borderRadius: '8px',
-                        marginBottom: '20px'
-                    }}>
-                        <p style={{ margin: 0, fontSize: '14px', color: '#6b7280' }}>Status</p>
-                        <p style={{ margin: '5px 0 0 0', fontWeight: 'bold', fontSize: '18px', color: '#374151', textTransform: 'capitalize' }}>
-                            {order.status}
-                        </p>
-                    </div>
-                )}
-
-                <p style={{ fontSize: '16px', color: '#374151', margin: 0, lineHeight: 1.5 }}>
-                    {order?.status === 'completed'
-                        ? 'Your order is ready! Please collect it.'
-                        : 'Please wait, the kitchen is preparing your order.'}
-                </p>
-
-                <button
-                    onClick={() => router.push(`/r/${slug}/menu`)}
-                    style={{
-                        marginTop: '30px',
-                        backgroundColor: 'black',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '8px',
-                        padding: '12px 24px',
-                        fontSize: '16px',
-                        fontWeight: 'bold',
-                        cursor: 'pointer',
-                        width: '100%'
-                    }}
-                >
-                    Back to Menu
-                </button>
+        <div className="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-white min-h-screen flex flex-col items-center justify-center p-6 overflow-hidden relative transition-colors duration-300">
+            {/* Background Elements */}
+            <div className="fixed inset-0 overflow-hidden pointer-events-none">
+                <div className="absolute top-[-10%] left-[-10%] w-72 h-72 bg-primary opacity-20 dark:opacity-10 blur-[100px] rounded-full"></div>
+                <div className="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-primary opacity-10 dark:opacity-5 blur-[120px] rounded-full"></div>
             </div>
+
+            <main className="w-full max-w-md z-10 animate-fade-in-up">
+                <div className="glass-card rounded-[2rem] p-8 text-center relative overflow-hidden bg-white/40 dark:bg-white/5 border border-white/20 dark:border-white/10 shadow-xl dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.8)]">
+                    
+                    {/* 3D Success Animated Icon */}
+                    <div className="success-icon-container flex justify-center mb-6">
+                        <div className="success-checkmark-3d w-20 h-20 bg-primary rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(242,147,13,0.4)] animate-glow-pulse">
+                            <svg className="h-10 w-10 text-white dark:text-black" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round"></path>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <h1 className="text-3xl font-bold mb-2 tracking-tight text-slate-900 dark:text-white">Order Received!</h1>
+                    <p className="text-slate-500 dark:text-gray-400 mb-8 font-semibold">
+                        {restaurant.name} • Order #{orderId.slice(0, 8).toUpperCase()}
+                    </p>
+
+                    <div className="space-y-4 mb-10">
+                        <p className="text-lg text-slate-700 dark:text-gray-200">
+                            {order?.status === 'completed'
+                                ? 'Your order is ready! Please collect it.'
+                                : 'Your meal is being prepared and will be served shortly.'}
+                        </p>
+                        
+                        {/* Status Progress Bar */}
+                        <div className="pt-4 pb-2">
+                            <div className="h-1 w-full bg-black/10 dark:bg-white/10 rounded-full overflow-hidden">
+                                <div className={`h-full bg-primary transition-all duration-1000 ${order?.status === 'completed' ? 'w-full' : 'w-1/3 animate-[pulse_2s_infinite]'}`}></div>
+                            </div>
+                            <div className="flex justify-between text-xs mt-2 text-primary font-semibold uppercase tracking-widest">
+                                <span>{order?.status || 'Preparing'}</span>
+                                <span className="text-slate-400 dark:text-gray-500">
+                                    {order?.status === 'completed' ? 'Done' : 'Serving'}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="mt-8 space-y-4">
+                    <button 
+                        onClick={() => router.push(`/r/${slug}/menu`)}
+                        className="btn-3d-press w-full bg-primary text-white dark:text-black font-bold py-4 rounded-2xl text-lg flex items-center justify-center space-x-2"
+                    >
+                        <span className="material-symbols-outlined">restaurant_menu</span>
+                        <span>Back to Menu</span>
+                    </button>
+                    
+                    <button className="btn-3d-press w-full bg-white/50 dark:bg-white/5 text-slate-900 dark:text-white font-semibold py-4 rounded-2xl text-lg border border-black/10 dark:border-white/10 flex items-center justify-center space-x-2 shadow-sm">
+                        <span className="material-symbols-outlined">receipt_long</span>
+                        <span>View Receipt</span>
+                    </button>
+                </div>
+                
+                <footer className="mt-12 text-center text-slate-400 dark:text-gray-500 text-sm tracking-widest uppercase font-semibold">
+                    {restaurant.name}
+                </footer>
+            </main>
         </div>
     )
 }
