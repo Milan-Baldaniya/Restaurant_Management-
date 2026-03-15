@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react'
 import { useKitchenOrders } from '@/hooks/useKitchenOrders'
 import { updateOrderStatus } from '@/lib/api/orders'
 import { supabase } from '@/lib/supabase/client'
+import { FoodLoader } from '@/components/ui/FoodLoader'
 
 const parseSupabaseDate = (dateStr: string) => {
     if (!dateStr) return new Date();
@@ -30,6 +31,21 @@ export default function KitchenPage() {
     const [selectedOrder, setSelectedOrder] = useState<any>(null)
     const [historyOrders, setHistoryOrders] = useState<any[]>([])
     const [loadingHistory, setLoadingHistory] = useState(false)
+    const [analyticsData, setAnalyticsData] = useState<{
+        todayCount: number;
+        avgPrepMins: number | null;
+        peakHourLabel: string;
+        peakHourChange: string;
+        topItem: string;
+        topItemCount: number;
+    }>({
+        todayCount: 0,
+        avgPrepMins: null,
+        peakHourLabel: '—',
+        peakHourChange: '—',
+        topItem: '—',
+        topItemCount: 0,
+    })
 
     useEffect(() => {
         const checkSession = async () => {
@@ -44,13 +60,68 @@ export default function KitchenPage() {
         if (viewMode === 'history' && session) {
             const fetchHistory = async () => {
                 setLoadingHistory(true)
-                const { data } = await supabase
+
+                // Fetch last 100 completed orders with items + table
+                const { data: completedOrders } = await supabase
                     .from('orders')
                     .select('*, order_items (*), tables (table_number)')
                     .eq('status', 'completed')
                     .order('created_at', { ascending: false })
-                    .limit(50)
-                if (data) setHistoryOrders(data)
+                    .limit(100)
+
+                if (completedOrders) {
+                    setHistoryOrders(completedOrders)
+
+                    // --- Analytics computations on client side ---
+
+                    // 1. Today's count
+                    const todayStart = new Date();
+                    todayStart.setHours(0, 0, 0, 0);
+                    const todayCount = completedOrders.filter((o: any) => parseSupabaseDate(o.created_at) >= todayStart).length;
+
+                    // 2. Avg prep time (using updated_at - created_at)
+                    const withTimes = completedOrders.filter((o: any) => o.updated_at);
+                    const avgPrepMins = withTimes.length > 0
+                        ? Math.round(withTimes.reduce((acc: number, o: any) => {
+                            return acc + (parseSupabaseDate(o.updated_at).getTime() - parseSupabaseDate(o.created_at).getTime()) / 60000;
+                          }, 0) / withTimes.length)
+                        : null;
+
+                    // 3. Peak hour: count orders per hour slot across today's orders
+                    const todayOrders = completedOrders.filter((o: any) => parseSupabaseDate(o.created_at) >= todayStart);
+                    const hourBuckets: Record<number, number> = {};
+                    todayOrders.forEach((o: any) => {
+                        const h = parseSupabaseDate(o.created_at).getHours();
+                        hourBuckets[h] = (hourBuckets[h] || 0) + 1;
+                    });
+                    let peakHourLabel = '—';
+                    let peakHourChange = '—';
+                    if (Object.keys(hourBuckets).length > 0) {
+                        const peakHour = Number(Object.entries(hourBuckets).sort(([,a],[,b]) => b - a)[0][0]);
+                        const fmt = (h: number) => {
+                            const d = new Date(); d.setHours(h, 0, 0, 0);
+                            return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                        };
+                        peakHourLabel = `${fmt(peakHour)} – ${fmt(peakHour + 1)}`;
+                        const avgPerHour = todayOrders.length / Math.max(Object.keys(hourBuckets).length, 1);
+                        const pct = Math.round(((hourBuckets[peakHour] - avgPerHour) / Math.max(avgPerHour, 1)) * 100);
+                        peakHourChange = pct >= 0 ? `+${pct}%` : `${pct}%`;
+                    }
+
+                    // 4. Top item across all fetched orders
+                    const itemCounts: Record<string, number> = {};
+                    completedOrders.forEach((o: any) => {
+                        (o.order_items || []).forEach((item: any) => {
+                            if (item.name) itemCounts[item.name] = (itemCounts[item.name] || 0) + (item.quantity || 1);
+                        });
+                    });
+                    const topEntry = Object.entries(itemCounts).sort(([,a],[,b]) => b - a)[0];
+                    const topItem = topEntry ? topEntry[0] : '—';
+                    const topItemCount = topEntry ? topEntry[1] : 0;
+
+                    setAnalyticsData({ todayCount, avgPrepMins, peakHourLabel, peakHourChange, topItem, topItemCount });
+                }
+
                 setLoadingHistory(false)
             }
             fetchHistory()
@@ -121,7 +192,7 @@ export default function KitchenPage() {
     }, {} as Record<string, typeof displayOrders>);
 
     if (loadingAuth) {
-        return <div className="bg-[#120e0a] min-h-screen text-white p-5 flex items-center justify-center font-display">System Check...</div>
+        return <FoodLoader text="Initialising Kitchen Portal..." fullScreen={true} />
     }
 
     if (!session) {
@@ -394,41 +465,121 @@ export default function KitchenPage() {
 
             {viewMode === 'history' && (
                 <main className="flex-1 px-4 py-8 md:px-10 max-w-7xl mx-auto w-full space-y-8">
-                    <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div className="kds-glass-card p-6 rounded-xl relative overflow-hidden group">
-                           <div className="absolute top-0 right-0 p-4 opacity-20 group-hover:scale-110 transition-transform"><span className="material-symbols-outlined text-6xl text-primary">receipt_long</span></div>
-                           <p className="text-slate-400 font-medium">History Pulled</p>
-                           <h2 className="text-4xl font-bold mt-2">{historyOrders.length}</h2>
+                    {/* Page Header */}
+                    <div className="flex items-start justify-between flex-wrap gap-4">
+                        <div>
+                            <h1 className="text-3xl font-black text-white tracking-tight">Kitchen Analytics</h1>
+                            <p className="text-slate-400 font-medium mt-1">Historical Performance</p>
                         </div>
-                        <div className="kds-glass-card p-6 rounded-xl relative overflow-hidden group border-l-4 border-l-primary">
-                           <div className="absolute top-0 right-0 p-4 opacity-20 group-hover:scale-110 transition-transform"><span className="material-symbols-outlined text-6xl text-primary">timer</span></div>
-                           <p className="text-slate-400 font-medium">System Status</p>
-                           <h2 className="text-4xl font-bold mt-2 text-emerald-500 flex items-center gap-2"><div className="w-3 h-3 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_10px_#10b981]"></div> Online</h2>
+                        <div className="flex items-center gap-2 bg-white/5 border border-white/10 px-4 py-2 rounded-xl text-sm text-slate-300">
+                            <span className="material-symbols-outlined text-primary text-sm">calendar_today</span>
+                            {new Date().toLocaleDateString([], { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                        </div>
+                    </div>
+
+                    {/* Analytics Cards */}
+                    <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        {/* Total Orders */}
+                        <div className="kds-glass-card p-6 rounded-2xl relative overflow-hidden group !border-2 !border-solid !border-primary/30 shadow-[0_0_20px_rgba(242,147,13,0.15)]">
+                            <div className="absolute -top-4 -right-4 w-24 h-24 bg-primary/10 rounded-full blur-xl group-hover:bg-primary/20 transition-all"></div>
+                            <div className="flex items-start justify-between mb-4">
+                                <p className="text-slate-400 font-medium text-sm uppercase tracking-wider">Total Orders Today</p>
+                                <span className="material-symbols-outlined text-primary text-2xl">receipt_long</span>
+                            </div>
+                            <h2 className="text-5xl font-black text-white mt-2">{analyticsData.todayCount}</h2>
+                            <p className="text-slate-500 text-xs mt-2 font-medium">Completed today · {historyOrders.length} total loaded</p>
+                        </div>
+
+                        {/* Avg Prep Time */}
+                        <div className="kds-glass-card p-6 rounded-2xl relative overflow-hidden group !border-2 !border-solid !border-blue-500/30 shadow-[0_0_20px_rgba(59,130,246,0.15)]">
+                            <div className="absolute -top-4 -right-4 w-24 h-24 bg-blue-500/10 rounded-full blur-xl group-hover:bg-blue-500/20 transition-all"></div>
+                            <div className="flex items-start justify-between mb-4">
+                                <p className="text-slate-400 font-medium text-sm uppercase tracking-wider">Avg. Prep Time</p>
+                                <span className="material-symbols-outlined text-blue-400 text-2xl">timer</span>
+                            </div>
+                            <h2 className="text-5xl font-black text-white mt-2">
+                                {analyticsData.avgPrepMins !== null ? `${analyticsData.avgPrepMins} m` : '— m'}
+                            </h2>
+                            <p className="text-slate-500 text-xs mt-2 font-medium">Average minutes from order to completion</p>
+                        </div>
+
+                        {/* System Status */}
+                        <div className="kds-glass-card p-6 rounded-2xl relative overflow-hidden group !border-2 !border-solid !border-green-500/30 shadow-[0_0_20px_rgba(34,197,94,0.15)]">
+                            <div className="absolute -top-4 -right-4 w-24 h-24 bg-green-500/10 rounded-full blur-xl group-hover:bg-green-500/20 transition-all"></div>
+                            <div className="flex items-start justify-between mb-4">
+                                <p className="text-slate-400 font-medium text-sm uppercase tracking-wider">System Status</p>
+                                <span className="material-symbols-outlined text-green-400 text-2xl">cloud_done</span>
+                            </div>
+                            <h2 className="text-5xl font-black text-green-400 mt-2 flex items-center gap-3">
+                                <div className="w-3 h-3 bg-green-500 rounded-full shadow-[0_0_10px_#10b981] animate-pulse flex-shrink-0"></div>
+                                Online
+                            </h2>
+                            <p className="text-slate-500 text-xs mt-2 font-medium">All systems operational</p>
                         </div>
                     </section>
 
-                    <section className="kds-glass-panel rounded-xl overflow-hidden border border-primary/10">
-                        {loadingHistory ? (
-                            <div className="p-12 text-center text-primary animate-pulse text-lg font-bold">Querying Historical Data...</div>
-                        ) : historyOrders.length === 0 ? (
-                            <div className="p-12 text-center text-slate-500 font-medium">No order history available.</div>
-                        ) : (
-                            <div className="overflow-x-auto">
+                    {/* Peak Hours & Insights */}
+                    <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div className="kds-glass-card p-6 rounded-2xl !border-2 !border-solid !border-white/10 col-span-1">
+                            <h3 className="text-sm font-bold uppercase tracking-widest text-slate-400 mb-4">Peak Hours</h3>
+                            <div className="space-y-4">
+                                <div className="flex justify-between items-center p-3 rounded-xl bg-primary/10 border border-primary/20">
+                                    <div>
+                                        <p className="text-xs text-slate-400 font-medium uppercase tracking-wider">Today's Peak Window</p>
+                                        <p className="text-white font-bold mt-1">{analyticsData.peakHourLabel}</p>
+                                    </div>
+                                    <span className="text-green-400 font-black text-sm bg-green-500/10 border border-green-500/20 px-3 py-1 rounded-full whitespace-nowrap">{analyticsData.peakHourChange} vs avg</span>
+                                </div>
+                                <div className="flex justify-between items-center p-3 rounded-xl bg-blue-500/10 border border-blue-500/20">
+                                    <div>
+                                        <p className="text-xs text-slate-400 font-medium uppercase tracking-wider">Top Item</p>
+                                        <p className="text-white font-bold mt-1 line-clamp-1">{analyticsData.topItem}</p>
+                                    </div>
+                                    <span className="text-blue-400 font-black text-sm bg-blue-500/10 border border-blue-500/20 px-3 py-1 rounded-full whitespace-nowrap">{analyticsData.topItemCount} sold</span>
+                                </div>
+                            </div>
+                            <div className="mt-4 p-3 rounded-xl bg-white/5 border border-white/10">
+                                <p className="text-xs text-slate-400 font-bold uppercase tracking-wider mb-1 flex items-center gap-1">
+                                    <span className="material-symbols-outlined text-primary text-xs">lightbulb</span> Kitchen Tip
+                                </p>
+                                <p className="text-slate-300 text-xs leading-relaxed">
+                                    {analyticsData.topItemCount > 0
+                                        ? `"${analyticsData.topItem}" is your best seller with ${analyticsData.topItemCount} servings. Consider pre-prepping it during peak hours to reduce wait time.`
+                                        : 'Start completing orders to get smart kitchen tips based on your real data.'}
+                                </p>
+                            </div>
+                        </div>
+
+                        {/* Orders Table */}
+                        <div className="lg:col-span-2 kds-glass-panel rounded-2xl overflow-hidden !border-2 !border-solid !border-white/10">
+                            <div className="flex items-center justify-between px-6 py-4 border-b border-white/10">
+                                <h3 className="text-sm font-bold uppercase tracking-widest text-slate-400">Completed Orders</h3>
+                                <span className="text-xs text-slate-500 font-medium">Showing {Math.min(historyOrders.length, 50)} of {historyOrders.length}</span>
+                            </div>
+                            {loadingHistory ? (
+                                <div className="p-12 text-center text-primary animate-pulse text-lg font-bold">Querying Historical Data...</div>
+                            ) : historyOrders.length === 0 ? (
+                                <div className="p-12 text-center text-slate-500 font-medium flex flex-col items-center gap-4">
+                                    <span className="material-symbols-outlined text-5xl text-slate-700">history</span>
+                                    No order history available.
+                                </div>
+                            ) : (
+                                <div className="overflow-x-auto max-h-[400px] overflow-y-auto">
                                     <table className="w-full text-left border-collapse">
-                                        <thead>
-                                            <tr className="bg-white/5 border-b border-white/10 text-xs uppercase tracking-widest text-slate-400">
-                                                <th className="px-6 py-4 font-bold rounded-tl-lg">Order ID</th>
-                                                <th className="px-6 py-4 font-bold">Items</th>
-                                                <th className="px-6 py-4 font-bold">Table</th>
-                                                <th className="px-6 py-4 font-bold">Date</th>
-                                                <th className="px-6 py-4 font-bold">Time</th>
-                                                <th className="px-6 py-4 font-bold text-center rounded-tr-lg">Status</th>
+                                        <thead className="sticky top-0 z-10">
+                                            <tr className="bg-[#1a1208] border-b border-white/10 text-xs uppercase tracking-widest text-slate-400">
+                                                <th className="px-6 py-3 font-bold">Order ID</th>
+                                                <th className="px-6 py-3 font-bold">Items</th>
+                                                <th className="px-6 py-3 font-bold">Table</th>
+                                                <th className="px-6 py-3 font-bold">Date</th>
+                                                <th className="px-6 py-3 font-bold">Time</th>
+                                                <th className="px-6 py-3 font-bold text-center">Status</th>
                                             </tr>
                                         </thead>
                                         <tbody className="divide-y divide-white/5 text-sm">
-                                            {historyOrders.map((order) => (
-                                                <tr key={order.id} className="hover:bg-white/5 transition-colors group cursor-pointer" onClick={() => setSelectedOrder(order)}>
-                                                    <td className="px-6 py-4 font-mono font-bold text-primary">
+                                            {historyOrders.map((order: any) => (
+                                                <tr key={order.id} className="hover:bg-white/5 transition-colors cursor-pointer" onClick={() => setSelectedOrder(order)}>
+                                                    <td className="px-6 py-4 font-mono font-bold text-primary text-xs">
                                                         #{order.id.slice(0, 6).toUpperCase()}
                                                     </td>
                                                     <td className="px-6 py-4 text-slate-300">
@@ -437,24 +588,25 @@ export default function KitchenPage() {
                                                             {order.order_items?.length || 0} items
                                                         </div>
                                                     </td>
-                                                    <td className="px-6 py-4 font-medium">
+                                                    <td className="px-6 py-4 font-medium text-slate-200">
                                                         {!order.tables?.table_number || order.tables.table_number === 0 ? 'Parcel' : `Table ${order.tables.table_number}`}
                                                     </td>
-                                                    <td className="px-6 py-4 font-medium text-slate-300">
+                                                    <td className="px-6 py-4 font-medium text-slate-400">
                                                         {parseSupabaseDate(order.created_at).toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' })}
                                                     </td>
-                                                    <td className="px-6 py-4 font-medium text-slate-300">
+                                                    <td className="px-6 py-4 font-medium text-slate-400">
                                                         {parseSupabaseDate(order.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                                     </td>
                                                     <td className="px-6 py-4 text-center">
-                                                        <span className="px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-500 text-xs font-bold border border-emerald-500/20 tracking-wider">COMPLETED</span>
+                                                        <span className="px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-bold border border-emerald-500/20 tracking-wider">COMPLETED</span>
                                                     </td>
                                                 </tr>
                                             ))}
                                         </tbody>
                                     </table>
-                            </div>
-                        )}
+                                </div>
+                            )}
+                        </div>
                     </section>
                 </main>
             )}
