@@ -41,7 +41,8 @@ const config: Config = {
         'glow-pulse': 'glowPulse 2s ease-in-out infinite',
         'bounce-3d': 'bounce3D 2.5s ease-in-out infinite',
         'spin-3d': 'spin3D 7s linear infinite',
-        'shadow-pulse': 'shadowPulse 2.5s ease-in-out infinite'
+        'shadow-pulse': 'shadowPulse 2.5s ease-in-out infinite',
+        'pulse-subtle': 'pulseSubtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
       },
       keyframes: {
         bounceSubtle: {

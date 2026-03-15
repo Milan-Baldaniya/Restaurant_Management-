@@ -34,6 +34,11 @@ const statusDescriptions: Record<string, string> = {
     completed: 'Enjoy your meal!'
 }
 
+const parseSupabaseDate = (dateStr: string) => {
+    if (!dateStr) return new Date();
+    return dateStr.endsWith('Z') || dateStr.includes('+') ? new Date(dateStr) : new Date(dateStr + 'Z');
+};
+
 export default function OrdersPage() {
     const router = useRouter()
     const params = useParams()
@@ -377,7 +382,7 @@ export default function OrdersPage() {
                                     <div>
                                         <h3 className="text-xl font-bold text-slate-900 dark:text-white">Order #{order.id.slice(0, 8).toUpperCase()}</h3>
                                         <p className="text-xs text-slate-500 dark:text-white/40 uppercase tracking-widest mt-1">
-                                            {new Date(order.created_at).toLocaleDateString()}
+                                            {parseSupabaseDate(order.created_at).toLocaleDateString()}
                                         </p>
                                     </div>
                                     <span className="text-2xl font-black text-primary">₹{order.total_amount.toFixed(2)}</span>
@@ -386,7 +391,7 @@ export default function OrdersPage() {
                                 <div className="flex items-center gap-3 text-sm text-slate-600 dark:text-white/60">
                                     <span className="material-symbols-outlined text-primary text-sm">schedule</span>
                                     <span>
-                                        {new Date(order.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                                        {parseSupabaseDate(order.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
                                     </span>
                                 </div>
                                 
