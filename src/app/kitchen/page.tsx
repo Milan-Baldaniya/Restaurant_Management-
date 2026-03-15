@@ -2,7 +2,7 @@
 
 export const dynamic = 'force-dynamic'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo, useCallback, memo } from 'react'
 import { useKitchenOrders } from '@/hooks/useKitchenOrders'
 import { updateOrderStatus } from '@/lib/api/orders'
 import { supabase } from '@/lib/supabase/client'
@@ -159,7 +159,7 @@ export default function KitchenPage() {
 
     const [localOverrides, setLocalOverrides] = useState<Record<string, string>>({})
 
-    const handleStatusUpdate = async (orderId: string, status: 'preparing' | 'ready' | 'completed') => {
+    const handleStatusUpdate = useCallback(async (orderId: string, status: 'preparing' | 'ready' | 'completed') => {
         setLocalOverrides(prev => ({ ...prev, [orderId]: status }))
         try {
             await updateOrderStatus(orderId, status)
@@ -175,21 +175,37 @@ export default function KitchenPage() {
                 return newState
             })
         }
-    }
+    }, [selectedOrder])
 
-    const rawDisplayOrders = orders.map(order => ({
-        ...order,
-        status: localOverrides[order.id] || order.status
-    })).filter(order => order.status !== 'completed')
+    const rawDisplayOrders = useMemo(() => {
+        return orders.map(order => ({
+            ...order,
+            status: localOverrides[order.id] || order.status
+        })).filter(order => order.status !== 'completed')
+    }, [orders, localOverrides])
 
-    const displayOrders = rawDisplayOrders.filter(order => filterStatus === 'all' || order.status === filterStatus)
+    const displayOrders = useMemo(() => {
+        return rawDisplayOrders
+            .filter(order => filterStatus === 'all' || order.status === filterStatus)
+            .sort((a, b) => parseSupabaseDate(a.created_at).getTime() - parseSupabaseDate(b.created_at).getTime())
+    }, [rawDisplayOrders, filterStatus])
 
-    const groupedOrders = displayOrders.reduce((acc, order) => {
-        const tableNumber = order.tables?.table_number === 0 ? '0' : (order.tables?.table_number?.toString() ?? 'parcel');
-        if (!acc[tableNumber]) acc[tableNumber] = [];
-        acc[tableNumber].push(order);
-        return acc;
-    }, {} as Record<string, typeof displayOrders>);
+    const sortedGroupedOrders = useMemo(() => {
+        const grouped = displayOrders.reduce((acc, order) => {
+            const tableNumber = order.tables?.table_number === 0 ? '0' : (order.tables?.table_number?.toString() ?? 'parcel');
+            if (!acc[tableNumber]) acc[tableNumber] = [];
+            acc[tableNumber].push(order);
+            return acc;
+        }, {} as Record<string, typeof displayOrders>);
+
+        return Object.entries(grouped).sort(([a], [b]) => {
+            if (a === '0') return -1;
+            if (b === '0') return 1;
+            if (a === 'parcel' && b !== '0') return -1;
+            if (b === 'parcel' && a !== '0') return 1;
+            return Number(a) - Number(b);
+        });
+    }, [displayOrders]);
 
     if (loadingAuth) {
         return <FoodLoader text="Initialising Kitchen Portal..." fullScreen={true} />
@@ -432,32 +448,24 @@ export default function KitchenPage() {
                         </div>
                     ) : viewMode === 'queue' ? (
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
-                            {[...displayOrders]
-                            .sort((a, b) => parseSupabaseDate(a.created_at).getTime() - parseSupabaseDate(b.created_at).getTime())
-                            .map(order => <OrderCard key={order.id} order={order} handleStatusUpdate={handleStatusUpdate} isNew={newOrders.has(order.id)} onClick={() => setSelectedOrder(order)} />)}
+                            {displayOrders.map(order => (
+                                <OrderCard key={order.id} order={order} handleStatusUpdate={handleStatusUpdate} isNew={newOrders.has(order.id)} onSelect={setSelectedOrder} />
+                            ))}
                         </div>
                     ) : (
                         <div className="flex flex-col gap-8">
-                            {Object.entries(groupedOrders)
-                                .sort(([a], [b]) => {
-                                    if (a === '0') return -1;
-                                    if (b === '0') return 1;
-                                    if (a === 'parcel' && b !== '0') return -1;
-                                    if (b === 'parcel' && a !== '0') return 1;
-                                    return Number(a) - Number(b);
-                                })
-                                .map(([tableNumber, tableOrders]) => (
-                                    <div key={tableNumber} className="kds-glass-panel p-6 rounded-2xl">
-                                        <h2 className="text-2xl font-black text-white border-b border-white/10 pb-4 mb-6">
-                                            {tableNumber === '0' || tableNumber === 'parcel' ? 'PARCEL' : `Table ${tableNumber}`}
-                                        </h2>
-                                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                                            {[...tableOrders]
-                                                .sort((a, b) => parseSupabaseDate(a.created_at).getTime() - parseSupabaseDate(b.created_at).getTime())
-                                                .map(order => <OrderCard key={order.id} order={order} handleStatusUpdate={handleStatusUpdate} isNew={newOrders.has(order.id)} onClick={() => setSelectedOrder(order)} />)}
-                                        </div>
+                            {sortedGroupedOrders.map(([tableNumber, tableOrders]) => (
+                                <div key={tableNumber} className="kds-glass-panel p-6 rounded-2xl">
+                                    <h2 className="text-2xl font-black text-white border-b border-white/10 pb-4 mb-6">
+                                        {tableNumber === '0' || tableNumber === 'parcel' ? 'PARCEL' : `Table ${tableNumber}`}
+                                    </h2>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                                        {tableOrders.map(order => (
+                                            <OrderCard key={order.id} order={order} handleStatusUpdate={handleStatusUpdate} isNew={newOrders.has(order.id)} onSelect={setSelectedOrder} />
+                                        ))}
                                     </div>
-                                ))}
+                                </div>
+                            ))}
                         </div>
                     )}
                 </main>
@@ -614,7 +622,7 @@ export default function KitchenPage() {
     )
 }
 
-function OrderCard({ order, handleStatusUpdate, isNew, onClick }: { order: any, handleStatusUpdate: any, isNew: boolean, onClick: () => void }) {
+const OrderCard = memo(function OrderCard({ order, handleStatusUpdate, isNew, onSelect }: { order: any, handleStatusUpdate: any, isNew: boolean, onSelect: (order: any) => void }) {
     const [mins, setMins] = useState(() => getTimeElapsedMins(order.created_at));
 
     useEffect(() => {
@@ -653,7 +661,7 @@ function OrderCard({ order, handleStatusUpdate, isNew, onClick }: { order: any, 
     const isCash = order.payment_method === 'cash' || order.payment_method === 'Cash'
 
     return (
-        <div className={`kds-glass-card rounded-3xl p-6 flex flex-col !border-[3px] !border-solid ${borderColor} ${glowClass} ${bgPulse} group transition-all hover:bg-white/5 cursor-pointer relative overflow-hidden`} onClick={onClick}>
+        <div className={`kds-glass-card rounded-3xl p-6 flex flex-col !border-[3px] !border-solid ${borderColor} ${glowClass} ${bgPulse} group transition-all hover:bg-white/5 cursor-pointer relative overflow-hidden`} onClick={() => onSelect(order)}>
             <div className="flex justify-between items-start mb-6">
                 <div>
                     <h2 className="text-4xl font-bold text-slate-100 line-clamp-1 tracking-tight">
@@ -712,4 +720,4 @@ function OrderCard({ order, handleStatusUpdate, isNew, onClick }: { order: any, 
             </div>
         </div>
     )
-}
+})

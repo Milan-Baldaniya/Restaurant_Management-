@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter, useParams } from 'next/navigation'
+import Image from 'next/image'
 import { useRestaurant } from '@/providers/RestaurantProvider'
 import { normalizeMobile } from '@/lib/normalizeMobile'
 
@@ -73,10 +74,17 @@ export default function CustomerEntryPage() {
                 {/* Hero Card */}
                 <div className="@container px-4 py-2 shrink-0">
                     <div 
-                        className="w-full bg-center bg-no-repeat bg-cover flex flex-col justify-end overflow-hidden bg-primary/10 rounded-xl h-[22vh] min-h-[140px] max-h-[220px] relative shadow-lg mx-auto" 
+                        className="w-full flex flex-col justify-end overflow-hidden bg-primary/10 rounded-xl h-[22vh] min-h-[140px] max-h-[220px] relative shadow-lg mx-auto" 
                         title="A delicious wood-fired artisanal pizza on a wooden table" 
-                        style={{ backgroundImage: 'url("https://lh3.googleusercontent.com/aida-public/AB6AXuA_Irgl0JYhxrfI6yc542MeyLRdLVzbaJf8qjtAqo__-qiOrEmrro1InRgxz5Mg8Q_MXB_0QRxupuJz7bkFMFWkPXj6eAZmt3nuDW2qjwbe0ZcRegfqr3wnULphLwS2aic41ZVelvZBpAEiSrS5basagFR7oeGq4XCowngJeIyi9LBvpBVdz5WID0TKG4H4HLIqKArG7uexCYKa09vV75VhChb8KDBzXpdHxaX5OMgJQo0ahgpsfskmhYwJwYy9-AqsSsjufjvdRAo")' }}
                     >
+                        <Image
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_Irgl0JYhxrfI6yc542MeyLRdLVzbaJf8qjtAqo__-qiOrEmrro1InRgxz5Mg8Q_MXB_0QRxupuJz7bkFMFWkPXj6eAZmt3nuDW2qjwbe0ZcRegfqr3wnULphLwS2aic41ZVelvZBpAEiSrS5basagFR7oeGq4XCowngJeIyi9LBvpBVdz5WID0TKG4H4HLIqKArG7uexCYKa09vV75VhChb8KDBzXpdHxaX5OMgJQo0ahgpsfskmhYwJwYy9-AqsSsjufjvdRAo"
+                            alt="Delicious Pizza Hero Image"
+                            fill
+                            className="object-cover"
+                            priority
+                            sizes="(max-width: 768px) 100vw, 400px"
+                        />
                         <div className="absolute inset-0 bg-gradient-to-t from-background-dark/90 to-transparent"></div>
                         <div className="relative z-10 p-4">
                             <span className="bg-primary text-white px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-widest mb-1 inline-block">Digital Menu</span>

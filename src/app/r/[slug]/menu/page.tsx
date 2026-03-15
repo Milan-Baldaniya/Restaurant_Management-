@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import { useRestaurant } from '@/providers/RestaurantProvider'
 import { supabase } from '@/lib/supabase/client'
@@ -84,6 +84,16 @@ export default function MenuPage() {
 
         fetchMenu()
     }, [restaurant, isSessionChecked, customerName])
+
+    // O(1) Lookup Map for Cart Items (Performance Optimization)
+    // Prevents O(N * M) traversal on every render when checking item quantities
+    const cartMap = useMemo(() => {
+        const map: Record<string, { quantity: number; price: number; name: string }> = {}
+        for (const item of cart) {
+            map[item.id] = item
+        }
+        return map
+    }, [cart])
 
     if (!restaurant || !isSessionChecked || !customerName) {
         return null
@@ -226,7 +236,8 @@ export default function MenuPage() {
                             <h3 className="text-xl font-bold text-slate-900 dark:text-white capitalize px-2">{category.name}</h3>
                             <div className="flex flex-col gap-4">
                                 {category.menu_items?.map((item: any) => {
-                                    const cartItem = cart.find((c) => c.id === item.id)
+                                    // O(1) Time Complexity Lookup instead of O(N) Array.find()
+                                    const cartItem = cartMap[item.id]
                                     const quantity = cartItem ? cartItem.quantity : 0
 
                                     if (!item.is_available) return null;

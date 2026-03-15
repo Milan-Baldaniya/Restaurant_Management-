@@ -1,6 +1,7 @@
 import React from 'react'
-import { FoodLoader } from '@/components/ui/FoodLoader'
 
+// Individual pages handle their own loading states with FoodLoader.
+// This prevents a double-loader from stacking.
 export default function Loading() {
-    return <FoodLoader text="Setting the table..." />
+    return null
 }
